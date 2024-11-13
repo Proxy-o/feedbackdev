@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm"
 import {
   boolean,
   timestamp,
@@ -5,6 +6,7 @@ import {
   text,
   primaryKey,
   integer,
+  varchar,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
 
@@ -84,3 +86,54 @@ export const authenticators = pgTable(
     }),
   })
 )
+
+
+export const companies = pgTable('companies', {
+  id: text('id').primaryKey()
+  .$defaultFn(() => crypto.randomUUID()),
+  name: varchar('name', { length: 255 }).notNull(),
+  industry: varchar('industry', { length: 100 }),
+  website: varchar('website', { length: 255 }),
+  city: varchar('city', { length: 100 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+
+export const reviews = pgTable('reviews', {
+  id:  text('id').primaryKey()
+  .$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').references(() => users.id).notNull(),
+  companyId: text('company_id').references(() => companies.id).notNull(),
+  rating: integer('rating').notNull(), // e.g., 1-5 stars
+  title: varchar('title', { length: 255 }).notNull(),
+  review: text('review').notNull(),
+  pros: text('pros'),
+  cons: text('cons'),
+  employmentStatus: varchar('employment_status', { length: 100 }),
+  jobTitle: varchar('job_title', { length: 255 }).notNull(),
+  isVerified: boolean('is_verified').default(false),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+
+// Define relations
+export const companiesRelations = relations(companies, ({ many }) => ({
+  reviews: many(reviews),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  reviews: many(reviews),
+}));
+
+export const reviewsRelations = relations(reviews, ({ one }) => ({
+  company: one(companies, {
+    fields: [reviews.companyId],
+    references: [companies.id],
+  }),
+  user: one(users, {
+    fields: [reviews.userId],
+    references: [users.id],
+  }),
+}));
