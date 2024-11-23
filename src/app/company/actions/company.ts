@@ -1,10 +1,11 @@
-// app/actions/company.ts
 "use server"
 
 import db from "@/db"
-import { companies } from "@/db/schema"
+import { companies,reviews } from "@/db/schema"
 import { count, like } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
+import { eq } from "drizzle-orm";
+
 
 export async function createCompany(formData: FormData) {
   try {
@@ -59,3 +60,58 @@ export const getCompanies = async (page: number, search: string) => {
     companies: companiesData,
   };
 };
+
+
+export async function getCompanyDetails(companyId: string) {
+  const company = await db.query.companies.findFirst({
+    where: eq(companies.id, companyId),
+  });
+
+  return { company };
+}
+
+export async function getCompanyDetailsWithUserVotes(companyId: string, userId: string | null) {
+  const company = await db.query.companies.findFirst({
+    where: eq(companies.id, companyId),
+  });
+
+  // First get reviews
+  const companyReviews = await db.query.reviews.findMany({
+    where: eq(reviews.companyId, companyId),
+    with: {
+      user: {
+        columns: {
+          name: true,
+          image: true,
+          id: true,
+        },
+      },
+      // This will get all votes for each review through the relation you defined
+      votes: true,
+    },
+    orderBy: (reviews, { desc }) => [desc(reviews.createdAt)],
+  });
+
+  // Transform the results to include vote counts and user's vote
+  const transformedReviews = companyReviews.map(review => {
+    // Calculate vote metrics from the votes relation
+    const allVotes = review.votes || [];
+    const voteCount = allVotes.reduce((sum, vote) => sum + vote.vote, 0);
+    const upvotes = allVotes.filter(vote => vote.vote === 1).length;
+    const downvotes = allVotes.filter(vote => vote.vote === -1).length;
+    const userVote = userId 
+      ? allVotes.find(vote => vote.userId === userId)?.vote ?? null
+      : null;
+
+    return {
+      ...review,
+      voteCount,
+      upvotes,
+      downvotes,
+      userVote,
+      votes: undefined, // Remove the raw votes array from the response
+    };
+  });
+
+  return { company, reviews: transformedReviews };
+}

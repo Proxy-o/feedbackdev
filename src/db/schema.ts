@@ -117,17 +117,23 @@ export const reviews = pgTable('reviews', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+export const reviewVotes = pgTable('review_votes', {
+  userId: text('user_id').references(() => users.id).notNull(),
+  reviewId: text('review_id').references(() => reviews.id).notNull(),
+  vote: integer('vote').notNull(), // 1 for upvote, -1 for downvote
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (reviewVote) => ({
+  // Use compound primary key instead of separate id
+  pk: primaryKey({ columns: [reviewVote.userId, reviewVote.reviewId] })
+}));
 
 // Define relations
 export const companiesRelations = relations(companies, ({ many }) => ({
   reviews: many(reviews),
 }));
 
-export const usersRelations = relations(users, ({ many }) => ({
-  reviews: many(reviews),
-}));
 
-export const reviewsRelations = relations(reviews, ({ one }) => ({
+export const reviewsRelations = relations(reviews, ({ many, one }) => ({
   company: one(companies, {
     fields: [reviews.companyId],
     references: [companies.id],
@@ -135,5 +141,22 @@ export const reviewsRelations = relations(reviews, ({ one }) => ({
   user: one(users, {
     fields: [reviews.userId],
     references: [users.id],
+  }),
+  votes: many(reviewVotes),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  reviews: many(reviews),
+  reviewVotes: many(reviewVotes),
+}));
+
+export const reviewVotesRelations = relations(reviewVotes, ({ one }) => ({
+  user: one(users, {
+    fields: [reviewVotes.userId],
+    references: [users.id],
+  }),
+  review: one(reviews, {
+    fields: [reviewVotes.reviewId],
+    references: [reviews.id],
   }),
 }));

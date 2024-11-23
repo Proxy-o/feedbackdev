@@ -5,6 +5,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import SignIn from "@/components/sign-in";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,19 +34,27 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider>
-          <AppSidebar />
-          <main className=" w-full">
-            <div className=" w-full bg-secondary/70 border-b z-50 h-8 sticky top-0 backdrop-blur-sm">
-              <SidebarTrigger />
-            </div>
-            <div className="p-1">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SidebarProvider defaultOpen={false}>
+            <AppSidebar />
+            <main className=" w-full">
               <SignIn />
-              {children}
-            </div>
-          </main>
-          <Toaster />
-        </SidebarProvider>
+              <div className=" w-full bg-secondary/70 border-b z-50 h-8 sticky top-0 backdrop-blur-sm">
+                <SidebarTrigger />
+              </div>
+              <div className="p-1 flex justify-center mx-auto">
+                {/* <SignIn /> */}
+                {children}
+              </div>
+            </main>
+            <Toaster />
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

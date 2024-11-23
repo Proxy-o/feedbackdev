@@ -6,7 +6,7 @@ export default async function Page() {
 
   return (
     <div className="container py-10">
-      <ReviewForm companies={companies} />
+      {/* <ReviewForm companies={companies} /> */}
     </div>
   );
 }

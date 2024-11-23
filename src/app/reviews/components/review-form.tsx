@@ -15,13 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -31,9 +24,6 @@ import { createReview } from "../actions/review";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  companyId: z.string({
-    required_error: "Please select a company.",
-  }),
   rating: z.string({
     required_error: "Please select a rating.",
   }),
@@ -59,10 +49,10 @@ type Company = {
 };
 
 interface ReviewFormProps {
-  companies: Company[];
+  company: Company;
 }
 
-export function ReviewForm({ companies }: ReviewFormProps) {
+export function ReviewForm({ company }: ReviewFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -81,6 +71,10 @@ export function ReviewForm({ companies }: ReviewFormProps) {
     setIsLoading(true);
 
     const formData = new FormData();
+    // Add the company ID to the form data
+    formData.append("companyId", company.id);
+
+    // Add the rest of the form values
     Object.entries(values).forEach(([key, value]) => {
       if (value) formData.append(key, value);
     });
@@ -97,6 +91,10 @@ export function ReviewForm({ companies }: ReviewFormProps) {
 
       form.reset();
       router.refresh();
+      const dialogCloseButton = document.getElementById("dialog-close-button");
+      if (dialogCloseButton) {
+        (dialogCloseButton as HTMLButtonElement).click();
+      }
     } catch (error) {
       console.error(error);
       toast.error("Failed to submit review. Please try again.");
@@ -104,43 +102,16 @@ export function ReviewForm({ companies }: ReviewFormProps) {
       setIsLoading(false);
     }
   }
+  const formErrors = Object.keys(form.formState.errors).length > 0;
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
+    <div className="w-full max-w-3xl mx-auto">
       <CardHeader>
-        <CardTitle>Write a Company Review</CardTitle>
+        <CardTitle>Write a Review for {company.name}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="companyId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a company" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {companies.map((company) => (
-                        <SelectItem key={company.id} value={String(company.id)}>
-                          {company.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="rating"
@@ -294,9 +265,19 @@ export function ReviewForm({ companies }: ReviewFormProps) {
             <Button type="submit" disabled={isLoading}>
               {isLoading ? "Submitting..." : "Submit Review"}
             </Button>
+            {formErrors && (
+              <div className="mt-4 p-4 bg-red-200 border border-red-500 rounded-lg">
+                <h3 className="text-red-700 font-semibold mb-2">Form Errors</h3>
+                {Object.entries(form.formState.errors).map(([field, error]) => (
+                  <p key={field} className="text-red-600 text-sm">
+                    {error.message}
+                  </p>
+                ))}
+              </div>
+            )}
           </form>
         </Form>
       </CardContent>
-    </Card>
+    </div>
   );
 }

@@ -1,14 +1,15 @@
 "use server"
 
+import { auth } from "@/auth"
 import db from "@/db"
-import { companies, reviews } from "@/db/schema"
-import { desc } from "drizzle-orm"
+import { companies, reviews, reviewVotes } from "@/db/schema"
+import { and, desc, eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 
 export async function createReview(formData: FormData) {
   try {
     const companyId = formData.get("companyId") as string
-    const userId = "cbbdacdf-5b03-4a8a-8cf8-5f43e770794b" // Replace with actual user ID from your auth system
+    const userId = "63ba5215-24ce-4ec0-a6b8-59a0d36d20cb" // Replace with actual user ID from your auth system
     const rating = formData.get("rating") as string
     const title = formData.get("title") as string
     const review = formData.get("review") as string
@@ -51,5 +52,67 @@ export async function getCompanies() {
   } catch (error) {
     console.error(error)
     return []
+  }
+}
+
+
+
+export async function voteReview(reviewId: string, vote: 1 | -1) {
+  const session = await auth();
+  if (!session || !session.user || !session.user.id) {
+    throw new Error("Unauthorized");
+
+  }
+  const userId = session.user.id;
+  
+
+  try {
+    // Check if user has already voted
+    const existingVote = await db.query.reviewVotes.findFirst({
+      where: and(
+        eq(reviewVotes.userId, userId),
+        eq(reviewVotes.reviewId, reviewId)
+      ),
+    });
+
+    if (existingVote) {
+      // If same vote, delete it (toggle off)
+      if (existingVote.vote === vote) {
+        await db
+          .delete(reviewVotes)
+          .where(
+            and(
+              eq(reviewVotes.userId, userId),
+              eq(reviewVotes.reviewId, reviewId)
+            )
+          );
+      } else {
+        // Update existing vote
+        await db
+          .update(reviewVotes)
+          .set({ vote })
+          .where(
+            and(
+              eq(reviewVotes.userId, userId),
+              eq(reviewVotes.reviewId, reviewId)
+            )
+          );
+      }
+    } else {
+      // Create new vote
+      await db.insert(reviewVotes).values({
+        userId,
+        reviewId,
+        vote,
+      });
+    }
+
+    // Revalidate the company page to reflect the new vote
+    revalidatePath('/company/[companyId]', 'page');
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Error recording vote:", error);
+    throw new Error("Failed to record vote");
   }
 }

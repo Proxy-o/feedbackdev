@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardContent } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { createCompany } from "../actions/company";
@@ -79,10 +79,8 @@ export function CompanyForm() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>Add New Company</CardTitle>
-      </CardHeader>
+    <div className="w-full max-w-2xl mx-auto">
+      <CardHeader></CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -141,6 +139,6 @@ export function CompanyForm() {
           </form>
         </Form>
       </CardContent>
-    </Card>
+    </div>
   );
 }
