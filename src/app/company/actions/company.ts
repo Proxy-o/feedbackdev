@@ -25,7 +25,7 @@ export async function createCompany(formData: FormData) {
       website,
     })
 
-    revalidatePath("/companies")
+    revalidatePath("/company")
     return { success: true }
   } catch (error) {
     console.error(error)
@@ -56,7 +56,7 @@ export const getCompanies = async (page: number, search: string) => {
   ]);
 
   return {
-    totalCount: totalCount[0].count,
+    totalPages: Math.ceil(totalCount[0].count / ITEMS_PER_PAGE),
     companies: companiesData,
   };
 };

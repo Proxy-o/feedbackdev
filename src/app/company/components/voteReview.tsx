@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { ChevronsDown, ChevronsUp, ThumbsDown, ThumbsUp } from "lucide-react";
+import { ChevronsDown, ChevronsUp } from "lucide-react";
 import React from "react";
 import { Review } from "@/app/company/components/reviewCard";
 import { voteReview } from "@/app/reviews/actions/review";
