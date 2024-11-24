@@ -94,6 +94,7 @@ export const companies = pgTable('companies', {
   name: varchar('name', { length: 255 }).notNull(),
   industry: varchar('industry', { length: 100 }),
   website: varchar('website', { length: 255 }),
+  logoUrl: varchar('logourl', { length: 255 }),
   city: varchar('city', { length: 100 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

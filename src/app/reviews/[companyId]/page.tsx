@@ -1,6 +1,6 @@
 import React from "react";
 import { ReviewForm } from "../components/review-form";
-import { getCompanyDetails } from "@/app/company/actions/company";
+import { getCompanyDetails } from "@/app/companies/actions/company";
 
 export default async function Page({
   params,

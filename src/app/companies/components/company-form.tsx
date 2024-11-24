@@ -26,9 +26,16 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Company name must be at least 2 characters.",
   }),
-  industry: z.string().min(2, {
-    message: "Industry must be at least 2 characters.",
-  }),
+  industry: z.string().optional(),
+  city: z.string().optional(),
+  logoUrl: z
+    .string()
+    .url({
+      message: "Please enter a valid URL.",
+    })
+    .optional()
+    .or(z.literal("")),
+
   website: z
     .string()
     .url({
@@ -46,8 +53,10 @@ export function CompanyForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      logoUrl: "",
       industry: "",
       website: "",
+      city: "",
     },
   });
 
@@ -72,6 +81,7 @@ export function CompanyForm() {
       form.reset();
       router.refresh();
     } catch (error) {
+      console.error(error);
       toast.error("Failed to create company");
     } finally {
       setIsLoading(false);
@@ -83,15 +93,42 @@ export function CompanyForm() {
       <CardHeader></CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Company Name</FormLabel>
+                  <FormLabel>Company Name *</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter company name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="logoUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Logo URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter logo URL" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>City</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter city" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

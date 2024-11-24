@@ -12,19 +12,22 @@ export async function createCompany(formData: FormData) {
     const name = formData.get("name") as string
     const industry = formData.get("industry") as string
     const website = formData.get("website") as string
+    const logoUrl = formData.get("logoUrl") as string
+    const city = formData.get("city") as string
 
     if (!name) {
       return {
         error: "Company name is required"
       }
     }
-
     await db.insert(companies).values({
       name,
       industry,
       website,
-    })
+      logoUrl,
+      city,
 
+    })
     revalidatePath("/company")
     return { success: true }
   } catch (error) {

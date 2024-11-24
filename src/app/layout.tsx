@@ -6,7 +6,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import SignIn from "@/components/sign-in";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SessionProvider } from "next-auth/react";
+import CurrentPath from "@/components/current-path";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -44,8 +44,9 @@ export default function RootLayout({
             <AppSidebar />
             <main className=" w-full">
               <SignIn />
-              <div className=" w-full bg-secondary/70 border-b z-50 h-8 sticky top-0 backdrop-blur-sm">
+              <div className="flex w-full bg-secondary/70 border-b z-50 h-8 sticky top-0 backdrop-blur-sm">
                 <SidebarTrigger />
+                <CurrentPath />
               </div>
               <div className="p-1 flex justify-center mx-auto">
                 {/* <SignIn /> */}

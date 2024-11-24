@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import React from "react";
-import { Review } from "@/app/company/components/reviewCard";
+import { Review } from "@/app/companies/components/reviewCard";
 import { voteReview } from "@/app/reviews/actions/review";
 
 export default function VoteReview({ review }: { review: Review }) {
