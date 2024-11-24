@@ -1,88 +1,126 @@
+# FeedbackDev
 
+## 📖 Overview
 
-# Next.js 15 Template with Shadcn, TailwindCSS, Drizzle, and NextAuth
+This is an open-source web application built to explore and manage company profiles. Users can browse through detailed profiles, create new ones, and share their experiences via reviews and ratings. The project is powered by modern technologies for a seamless and intuitive experience.
 
-This is a Next.js 15 template built with modern tools to speed up your development process. It integrates Shadcn for UI components, Tailwind CSS for styling, Drizzle as the TypeScript-first ORM, and NextAuth for authentication.
+### Key Features
 
-## Features
+- **Browse & Manage Companies**: View company profiles or create new ones effortlessly.
+- **Detailed Reviews & Ratings**: Share your experiences with others through insightful reviews.
+- **Modern Tech Stack**: Built with cutting-edge tools for performance and scalability.
 
-- **Next.js 15** - The latest features of Next.js with powerful, flexible API routes and components.
-- **Shadcn** - Easily customizable and accessible UI components.
-- **Tailwind CSS** - Rapidly build modern and responsive designs.
-- **Drizzle ORM** - Type-safe ORM for seamless database interactions.
-- **NextAuth** - Authentication made easy, with support for various providers.
+---
 
-## Getting Started
+## 🚀 Tech Stack
+
+- **[Next.js 15](https://nextjs.org/)**: The React framework for production-grade applications.
+- **[Drizzle ORM](https://orm.drizzle.team/)**: Type-safe SQL ORM for managing database interactions.
+- **[ShadCN](https://shadcn.dev/)**: Flexible and customizable component library.
+- **[Auth.js](https://authjs.dev/)**: Authentication library for handling secure logins and sessions.
+
+---
+
+## 🛠️ Getting Started
 
 ### Prerequisites
 
-Ensure you have **Node.js** and **npm**  installed on your machine.
+- **Node.js**: Ensure you have Node.js installed (v18+ recommended).
+- **Package Manager**: Use `pnpm`
 
 ### Installation
 
-1. Clone this repository:
+1. Clone the repository:
+
    ```bash
-   git clone https://github.com/Proxy-o/Next.js15-Template-with-Shadcn-TailwindCSS-Drizzle-NextAuth
-   cd nextjs-15-template
+   git clone https://github.com/Proxy-o/feedbackdev.git
+   cd feedbackdev
    ```
 
 2. Install dependencies:
-   ```bash
-   npm install
-   ```
-   for me its better to use pnpm 
+
    ```bash
    pnpm install
+
    ```
 
-3. Set up environment variables:
-   - Create a `.env` file at the root of the project and add the following environment variables:
-```plaintext
-# Authentication Secret
-AUTH_SECRET="your_auth_secret_here"
-
-# GitHub Authentication (NextAuth)
-AUTH_GITHUB_ID="your_github_client_id"
-AUTH_GITHUB_SECRET="your_github_client_secret"
-
-# Database URL (using Drizzle with PostgreSQL)
-DATABASE_URL="your_pg_link"
-```
-
-**Note**:
-- Replace `your_auth_secret_here` with a secure random string for `AUTH_SECRET`.
-- Replace `your_github_client_id` and `your_github_client_secret` with values from your GitHub OAuth application.
-- Replace `your_pg_link`, with you link to db or you can use slqlite. 
-
-
+3. Set up your `.env` file (see below).
 
 4. Start the development server:
+
    ```bash
-   npm run dev
+   pnpm run dev
+
    ```
 
-### Folder Structure
+5. Visit the application at [http://localhost:3000](http://localhost:3000).
 
-- `src/app/` - Contains Next.js app router .
-- `src/components/` - Shared UI components built with Shadcn.
-- `src/hooks/` - Sharded custom hooks .
-- `src/lib/` - Utility functions and configuration files.
-- `src/db/` - Database schema and configurations for Drizzle.
+---
 
-## Configuration
+## 📋 .env Configuration
 
-- **Authentication**: Set up providers in the `src/auth.ts` configuration.
-- **Database**: Define schema in `src/db/schema.ts` and use Drizzle ORM for database interactions .
+Create a `.env` file in the root of your project with the following variables:
 
-## Deployment
-
-To deploy this application, follow the instructions for deploying Next.js apps on [Vercel](https://vercel.com/) or any other cloud provider.
-
-## Contributing
-
-Feel free to open issues or submit pull requests if you’d like to contribute.
-
-## License
-
-This template is open source and available under the MIT License.
+```plaintext
+AUTH_SECRET=""
+AUTH_GITHUB_ID=""
+AUTH_GITHUB_SECRET=""
+AUTH_FORTY_TWO_CLIENT_ID=""
+AUTH_FORTY_TWO_CLIENT_SECRET=""
+AUTH_TRUST_HOST=http://localhost:3000
+DATABASE_URL=""
 ```
+
+### Environment Variable Descriptions
+
+- `AUTH_SECRET`: A secret key used by Auth.js to sign session tokens.
+- `AUTH_GITHUB_ID` & `AUTH_GITHUB_SECRET`: Credentials for GitHub OAuth.
+- `AUTH_FORTY_TWO_CLIENT_ID` & `AUTH_FORTY_TWO_CLIENT_SECRET`: Credentials for 42 (École 42) OAuth.
+- `AUTH_TRUST_HOST`: Trusted host URL for authentication callbacks.
+- `DATABASE_URL`: Connection string for your database.
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions to improve this project! Here’s how you can help:
+
+1. **Fork the Repository**:
+
+   - Click the "Fork" button in the top-right corner of this repository.
+
+2. **Clone Your Fork**:
+
+   ```bash
+   git clone https://github.com/proxy-o/feedbackdev.git
+   ```
+
+3. **Create a New Branch**:
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+4. **Make Changes**:
+
+   - Add new features or fix bugs.
+
+5. **Test Your Changes**:
+
+   - Run `pnpm run dev` to test locally.
+
+6. **Submit a Pull Request**:
+   - Push your changes to your fork and open a pull request in the main repository.
+
+### Guidelines
+
+- Ensure your code passes all linting and tests before submitting.
+- run `pnpm run build` before submitting
+
+---
+
+## 🧑‍💻 License
+
+This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute this software.
+
+---
