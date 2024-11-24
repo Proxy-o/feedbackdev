@@ -7,6 +7,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import Companies from "./components/companies";
 import { Plus } from "lucide-react";
 import Search from "./components/search";
+import CompanyListSkeleton from "./components/companies-skeleton";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -38,7 +39,10 @@ export default async function Page(props: {
         </CardHeader>
         <CardContent>
           <Search placeholder="Search companies" />
-          <Suspense key={query + currentPage} fallback={<div> Loading...</div>}>
+          <Suspense
+            key={query + currentPage}
+            fallback={<CompanyListSkeleton />}
+          >
             <Companies query={query} currentPage={currentPage} />
           </Suspense>
         </CardContent>

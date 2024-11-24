@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import SignIn from "@/components/sign-in";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
-import CurrentPath from "@/components/current-path";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,21 +36,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider defaultOpen={false}>
-            <AppSidebar />
-            <main className=" w-full">
-              <SignIn />
-              <div className="flex w-full bg-secondary/70 border-b z-50 h-8 sticky top-0 backdrop-blur-sm">
-                <SidebarTrigger />
-                <CurrentPath />
-              </div>
-              <div className="p-1 flex justify-center mx-auto">
-                {/* <SignIn /> */}
-                {children}
-              </div>
-            </main>
-            <Toaster />
-          </SidebarProvider>
+          <main className=" w-full">
+            <div className=" flex justify-center mx-auto">{children}</div>
+          </main>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

@@ -3,7 +3,7 @@ import { CompanyForm } from "../components/company-form";
 
 export default function page() {
   return (
-    <div>
+    <div className="w-full ">
       <CompanyForm />
     </div>
   );

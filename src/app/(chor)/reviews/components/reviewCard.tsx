@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, ThumbsUp, ThumbsDown, Users } from "lucide-react";
-import VoteReview from "./voteReview";
+import VoteReview from "../../companies/components/voteReview";
 import { auth } from "@/auth";
 
 export type Review = {
@@ -53,7 +53,6 @@ export async function ReviewCard({ review }: ReviewCardProps) {
       }`}
     >
       <CardContent className="pt-6 flex flex-col h-full">
-        {/* Header Section */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-4">
             <Avatar>
@@ -84,17 +83,14 @@ export async function ReviewCard({ review }: ReviewCardProps) {
           </div>
         </div>
 
-        {/* Title Section */}
         <h3 className="font-semibold mb-2">{review.title}</h3>
 
-        {/* Review Section - Takes all available space */}
         <p className="text-sm text-muted-foreground mb-4 flex-grow">
           {review.review.length > 150
             ? `${review.review.slice(0, 150)}...`
             : review.review}
         </p>
 
-        {/* Footer Section */}
         <div className="flex items-center justify-between mt-auto">
           <div className="flex items-center space-x-2">
             {review.isVerified && (

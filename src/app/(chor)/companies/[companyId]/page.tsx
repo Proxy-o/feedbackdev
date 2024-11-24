@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Building, MapPin, Globe, Plus } from "lucide-react";
 import { getCompanyDetailsWithUserVotes } from "../actions/company";
-import { ReviewCard } from "../components/reviewCard";
+import { ReviewCard } from "../../reviews/components/reviewCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { auth } from "@/auth";

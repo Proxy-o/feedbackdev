@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import React from "react";
-import { Review } from "@/app/companies/components/reviewCard";
-import { voteReview } from "@/app/reviews/actions/review";
+import { Review } from "@/app/(chor)/reviews/components/reviewCard";
+import { voteReview } from "@/app/(chor)/reviews/actions/review";
 
 export default function VoteReview({ review }: { review: Review }) {
   const handleVote = async (vote: 1 | -1) => {
