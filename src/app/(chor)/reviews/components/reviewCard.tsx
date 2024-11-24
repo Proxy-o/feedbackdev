@@ -45,7 +45,6 @@ export async function ReviewCard({ review }: ReviewCardProps) {
   }
   const isAuthor = review.user.id === session.user.id;
 
-  console.log("ReviewCard", review);
   return (
     <Card
       className={`mb-4 hover:scale-105 transition-transform duration-300 ${
@@ -85,9 +84,9 @@ export async function ReviewCard({ review }: ReviewCardProps) {
 
         <h3 className="font-semibold mb-2">{review.title}</h3>
 
-        <p className="text-sm text-muted-foreground mb-4 flex-grow">
-          {review.review.length > 150
-            ? `${review.review.slice(0, 150)}...`
+        <p className="text-sm text-muted-foreground mb-4 flex-grow whitespace-pre-line">
+          {review.review.length > 30
+            ? `${review.review.slice(0, 30)}...`
             : review.review}
         </p>
 
@@ -101,7 +100,7 @@ export async function ReviewCard({ review }: ReviewCardProps) {
             <Badge variant="outline" className="text-xs">
               {review.employmentStatus}
             </Badge>
-            {isAuthor && <VoteReview review={review} />}
+            {!isAuthor && <VoteReview review={review} />}
           </div>
 
           <div className="flex items-center space-x-4">

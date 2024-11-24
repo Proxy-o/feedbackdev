@@ -12,16 +12,18 @@ export default async function Layout({
   // if not logged in, show login page
   const session = await auth();
 
-  if (!session) redirect("/");
+  if (!session || !session.user) redirect("/");
   return (
     <SidebarProvider defaultOpen={false}>
       <AppSidebar user={session.user} />
-      <main className=" w-full">
+      <main className=" w-full rounded-sm ">
         <div className="flex w-full bg-secondary/70 border-b z-50 h-8 sticky top-0 backdrop-blur-sm">
           <SidebarTrigger />
           <CurrentPath />
         </div>
-        <div className="p-1 flex justify-center mx-auto">{children}</div>
+        <div className="p-1 flex justify-center mx-auto rounded-sm">
+          {children}
+        </div>
       </main>
     </SidebarProvider>
   );

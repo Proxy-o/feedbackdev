@@ -13,10 +13,11 @@ import Link from "next/link";
 
 export default async function Home() {
   const session = await auth();
+  const logged = session && session.user;
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <div className="flex-1 flex items-center justify-center p-6 z-50 ">
-        {!session ? (
+        {!logged ? (
           <Card className="w-full max-w-md bg-secondary/30 backdrop-blur-sm">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold">Login</CardTitle>

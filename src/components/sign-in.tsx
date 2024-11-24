@@ -1,7 +1,7 @@
 import { signIn } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
-import { Github, Mail } from "lucide-react";
+import { Github } from "lucide-react";
 
 const providers = [
   {

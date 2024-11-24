@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createReview } from "../actions/review";
@@ -71,10 +71,8 @@ export function ReviewForm({ company }: ReviewFormProps) {
     setIsLoading(true);
 
     const formData = new FormData();
-    // Add the company ID to the form data
     formData.append("companyId", company.id);
 
-    // Add the rest of the form values
     Object.entries(values).forEach(([key, value]) => {
       if (value) formData.append(key, value);
     });
@@ -90,11 +88,7 @@ export function ReviewForm({ company }: ReviewFormProps) {
       toast.success("Review submitted successfully.");
 
       form.reset();
-      router.refresh();
-      const dialogCloseButton = document.getElementById("dialog-close-button");
-      if (dialogCloseButton) {
-        (dialogCloseButton as HTMLButtonElement).click();
-      }
+      router.push(`/companies/${company.id}`);
     } catch (error) {
       console.error(error);
       toast.error("Failed to submit review. Please try again.");

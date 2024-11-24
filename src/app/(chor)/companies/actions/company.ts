@@ -20,6 +20,15 @@ export async function createCompany(formData: FormData) {
         error: "Company name is required"
       }
     }
+    // serch for company with the same name
+    const existingCompany = await db.query.companies.findFirst({
+      where: eq(companies.name, name)
+    })
+    if (existingCompany) {
+      return {
+        error: "Company with this name already exists"
+      }
+    }
     await db.insert(companies).values({
       name,
       industry,

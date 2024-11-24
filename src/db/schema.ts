@@ -121,10 +121,9 @@ export const reviews = pgTable('reviews', {
 export const reviewVotes = pgTable('review_votes', {
   userId: text('user_id').references(() => users.id).notNull(),
   reviewId: text('review_id').references(() => reviews.id).notNull(),
-  vote: integer('vote').notNull(), // 1 for upvote, -1 for downvote
+  vote: integer('vote').notNull(), 
   createdAt: timestamp('created_at').defaultNow().notNull(),
 }, (reviewVote) => ({
-  // Use compound primary key instead of separate id
   pk: primaryKey({ columns: [reviewVote.userId, reviewVote.reviewId] })
 }));
 

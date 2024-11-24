@@ -1,5 +1,3 @@
-// Label component extends from shadcnui - https://ui.shadcn.com/docs/components/label
-
 "use client";
 import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";

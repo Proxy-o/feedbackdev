@@ -14,8 +14,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   }),
   providers: [Github,
     FortyTwoProvider({
-      clientId: process.env.FORTY_TWO_CLIENT_ID,
-      clientSecret: process.env.FORTY_TWO_CLIENT_SECRET
+      clientId: process.env.AUTH_FORTY_TWO_CLIENT_ID,
+      clientSecret: process.env.AUTH_FORTY_TWO_CLIENT_SECRET
     })
   ],
 })
