@@ -115,7 +115,9 @@ export async function ReviewCard({ review }: ReviewCardProps) {
                   <DialogTitle>{review.title}</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                  <p>{review.review}</p>
+                  <p className="break-words max-h-72 overflow-auto">
+                    {review.review}
+                  </p>
                   {review.pros && (
                     <div className="flex items-start space-x-2">
                       <ThumbsUp className="h-5 w-5 text-green-500 mt-1" />
