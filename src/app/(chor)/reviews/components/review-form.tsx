@@ -1,4 +1,3 @@
-// components/review-form.tsx
 "use client";
 
 import { useState } from "react";
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,11 +17,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Card,
+  CardFooter,
+  CardDescription,
+} from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createReview } from "../actions/review";
 import { toast } from "sonner";
+import { Star } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
   rating: z.string({
@@ -96,12 +105,16 @@ export function ReviewForm({ company }: ReviewFormProps) {
       setIsLoading(false);
     }
   }
-  const formErrors = Object.keys(form.formState.errors).length > 0;
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
-        <CardTitle>Write a Review for {company.name}</CardTitle>
+        <CardTitle className="text-2xl">
+          Write a Review for {company.name}
+        </CardTitle>
+        <CardDescription>
+          Share your experience to help others make informed decisions
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -110,24 +123,31 @@ export function ReviewForm({ company }: ReviewFormProps) {
               control={form.control}
               name="rating"
               render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel>Rating</FormLabel>
+                <FormItem>
+                  <FormLabel>Overall Rating</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="flex space-x-4"
+                      className="flex space-x-1"
                     >
                       {[1, 2, 3, 4, 5].map((rating) => (
-                        <FormItem
-                          key={rating}
-                          className="flex items-center space-x-2"
-                        >
+                        <FormItem key={rating}>
                           <FormControl>
-                            <RadioGroupItem value={String(rating)} />
+                            <RadioGroupItem
+                              value={String(rating)}
+                              className="sr-only peer"
+                              id={`rating-${rating}`}
+                            />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            {rating} {rating === 1 ? "Star" : "Stars"}
+                          <FormLabel
+                            htmlFor={`rating-${rating}`}
+                            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:text-yellow-500 [&:has([data-state=checked])]:text-primary cursor-pointer"
+                          >
+                            <Star className="w-6 h-6 mb-1  peer-data-[state=checked]:text-primary [&:has([data-state=checked])]:text-primary" />
+                            <span className="text-xs font-medium">
+                              {rating}
+                            </span>
                           </FormLabel>
                         </FormItem>
                       ))}
@@ -148,9 +168,9 @@ export function ReviewForm({ company }: ReviewFormProps) {
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="flex space-x-4"
+                      className="flex flex-col space-y-1 sm:flex-row sm:space-x-4 sm:space-y-0"
                     >
-                      <FormItem className="flex items-center space-x-2">
+                      <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="current" />
                         </FormControl>
@@ -158,7 +178,7 @@ export function ReviewForm({ company }: ReviewFormProps) {
                           Current Employee
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-2">
+                      <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="former" />
                         </FormControl>
@@ -180,12 +200,17 @@ export function ReviewForm({ company }: ReviewFormProps) {
                 <FormItem>
                   <FormLabel>Job Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your job title" {...field} />
+                    <Input placeholder="e.g. Software Engineer" {...field} />
                   </FormControl>
+                  <FormDescription>
+                    Your current or most recent position at {company.name}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <Separator />
 
             <FormField
               control={form.control}
@@ -194,11 +219,11 @@ export function ReviewForm({ company }: ReviewFormProps) {
                 <FormItem>
                   <FormLabel>Review Title</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter a title for your review"
-                      {...field}
-                    />
+                    <Input placeholder="Summarize your experience" {...field} />
                   </FormControl>
+                  <FormDescription>
+                    A brief headline for your review
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -209,69 +234,75 @@ export function ReviewForm({ company }: ReviewFormProps) {
               name="review"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Review</FormLabel>
+                  <FormLabel>Your Review</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Write your review here..."
+                      placeholder="Share your experience working at this company..."
                       className="min-h-[150px]"
                       {...field}
                     />
                   </FormControl>
+                  <FormDescription>
+                    Provide details about your role, work environment, company
+                    culture, and overall experience
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="pros"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pros</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="What did you like about working here?"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid gap-6 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="pros"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Pros</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="What did you like about working here?"
+                        className="min-h-[100px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="cons"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cons</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="What didn't you like about working here?"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Submitting..." : "Submit Review"}
-            </Button>
-            {formErrors && (
-              <div className="mt-4 p-4 bg-red-200 border border-red-500 rounded-lg">
-                <h3 className="text-red-700 font-semibold mb-2">Form Errors</h3>
-                {Object.entries(form.formState.errors).map(([field, error]) => (
-                  <p key={field} className="text-red-600 text-sm">
-                    {error.message}
-                  </p>
-                ))}
-              </div>
-            )}
+              <FormField
+                control={form.control}
+                name="cons"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cons</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="What could be improved?"
+                        className="min-h-[100px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </form>
         </Form>
       </CardContent>
-    </div>
+      <CardFooter className="flex justify-between">
+        <Button variant="outline" onClick={() => form.reset()}>
+          Reset
+        </Button>
+        <Button
+          type="submit"
+          onClick={form.handleSubmit(onSubmit)}
+          disabled={isLoading}
+        >
+          {isLoading ? "Submitting..." : "Submit Review"}
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

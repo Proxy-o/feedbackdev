@@ -2,13 +2,21 @@
 
 import db from "@/db"
 import { companies,reviews } from "@/db/schema"
-import { count, like } from "drizzle-orm"
+import { count, ilike } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm";
+import { auth } from "@/auth"
 
 
 export async function createCompany(formData: FormData) {
   try {
+    // Check if user is authenticated
+    const session = await auth()
+    if (!session || !session.user || !session.user.id) {
+      return {
+        error: "Unauthorized"
+      }
+    }
     const name = formData.get("name") as string
     const industry = formData.get("industry") as string
     const website = formData.get("website") as string
@@ -57,11 +65,11 @@ export const getCompanies = async (page: number, search: string) => {
     db
       .select({ count: count() })
       .from(companies)
-      .where(like(companies.name, `%${search}%`)),
+      .where(ilike(companies.name, `%${search}%`)),
     db
       .select()
       .from(companies)
-      .where(like(companies.name, `%${search}%`))
+      .where(ilike(companies.name, `%${search}%`))
       .orderBy(companies.name)
       .limit(take)
       .offset(skip),

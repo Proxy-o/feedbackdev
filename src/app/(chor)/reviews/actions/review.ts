@@ -8,8 +8,14 @@ import { revalidatePath } from "next/cache"
 
 export async function createReview(formData: FormData) {
   try {
+    const session = await auth()
+    if (!session || !session.user || !session.user.id) {
+      return {
+        error: "Unauthorized"
+      }
+    }
+    const userId = session.user.id
     const companyId = formData.get("companyId") as string
-    const userId = "63ba5215-24ce-4ec0-a6b8-59a0d36d20cb" // Replace with actual user ID from your auth system
     const rating = formData.get("rating") as string
     const title = formData.get("title") as string
     const review = formData.get("review") as string
