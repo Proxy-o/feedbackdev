@@ -65,6 +65,10 @@ export function CompanyForm() {
 
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {
+      if (key === "name" && value.trim().length < 2) {
+        toast.error("Company name must be at least 2 characters.");
+        return;
+      }
       formData.append(key, value);
     });
 
